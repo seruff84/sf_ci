@@ -24,13 +24,15 @@ pipeline {
 		            sh  ("""
                                      curl -s -X POST https://api.telegram.org/bot${TOKEN}/sendMessage -d chat_id=${CHAT_ID} -d parse_mode=markdown -d text='response code 200'>
                             """)
+                        }
                           return    
 		     } else if (response.status != 200) {
                         withCredentials([string(credentialsId: 'chatWebid', variable: 'TOKEN'), string(credentialsId: 'chatId', variable: 'CHAT_ID')]) {
 		            sh  ("""
                                      curl -s -X POST https://api.telegram.org/bot${TOKEN}/sendMessage -d chat_id=${CHAT_ID} -d parse_mode=markdown -d text='response code not 200'>
                             """)
-                          return    
+                         }
+                         return    
                        }
 		}
 	    }

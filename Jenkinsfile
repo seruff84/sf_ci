@@ -19,9 +19,14 @@ pipeline {
 	    steps {
 		script {
 		     def response = httpRequest responseHandle: 'NONE', url: 'http://localhost:9889/index.html', wrapAsMultipart: false
+
                      if (response.status == 200) {
-                     telegramSend(message: 'Hello World', chatId: 172467490)    
-		     }
+                          telegramSend(message: 'Status 200', chatId: 172467490)
+                          return    
+		     } else if (response.status != 200 {
+	                  telegramSend(message: 'Status not 200', chatId: 172467490)
+                          return
+                       }
 		}
 	    }
         }
@@ -33,7 +38,14 @@ pipeline {
                          curl http://localhost:9889/index.html | md5sum | awk '{print $1 " index.html"}' > hash.md5
                          md5sum -c hash.md5 | awk '{print $2}'
                     '''
-                    println(md5)
+                    if (md5 == 'OK') {
+                          telegramSend(message: 'MD5 OK', chatId: 172467490)
+                          return
+                     } else {
+                          telegramSend(message: 'MD5 not OK', chatId: 172467490)
+                          return
+                     }
+
                  }
              }
         }

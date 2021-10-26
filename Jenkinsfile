@@ -41,11 +41,10 @@ pipeline {
         stage('4-test2') {
             steps {
 		script {
-                    def md5 = sh '''            
-                         curl -s http://localhost:9889/index.html | md5sum | awk '{print $1 " index.html"}' > hash.md5
-                         md5sum -c hash.md5 | awk '{print $2}'
-                    '''
-                    telegramSend(message: 'md5' , chatId: 172467490)
+                    def md5 = sh (         
+                         script: 'curl -s http://localhost:9889/index.html | md5sum | awk \'{print $1 " index.html"}\' | md5sum -c | awk \'{print $2}\'',
+                         returnStdout: true
+                    ).trim()    
                     println ('Status: '+md5)  
                     if (md5 == 'OK') {
 

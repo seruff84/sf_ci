@@ -17,15 +17,19 @@ pipeline {
         }
         stage('3-test1') {
             steps {
+		def response = httpRequest responseHandle: 'NONE', url: 'http://localhost:9889/index.html', wrapAsMultipart: false
+		println('Status: '+response.status)
+		println('Response: '+response.content)
+
+		}
+        }
+
+        stage('4-test2') {
+            steps {
                 sh '''            
                     curl http://localhost:9889/index.html | md5sum | awk '{print $1 " index.html"}' > hash.md5
                     md5sum -c hash.md5
                 '''
-            }
-        }
-        stage('4-test2') {
-            steps {
-		httpRequest responseHandle: 'NONE', url: 'http://localhost:9889/index.html', wrapAsMultipart: false
             }
         }
         stage('5-Clean') {

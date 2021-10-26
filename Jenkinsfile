@@ -15,7 +15,7 @@ pipeline {
                 sh 'docker run --name my-app -d -p 9889:80 seruff/my_nginx'
             }
         }
-        stage('3-test') {
+        stage('3-test1') {
             steps {
                 sh '''            
                     curl http://localhost:9889/index.html | md5sum | awk '{print $1 " index.html"}' > hash.md5
@@ -23,7 +23,14 @@ pipeline {
                 '''
             }
         }
-        stage('4-Clean') {
+        stage('4-test2') {
+            steps {
+		def response = httpRequest 'http://localhost:9889/index.html'
+	        println("Status: "+response.status)
+		println("Content: "+response.content)
+            }
+        }
+        stage('5-Clean') {
             steps {
                 sh '''            
                     docker container stop my-app

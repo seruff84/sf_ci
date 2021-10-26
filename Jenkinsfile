@@ -25,9 +25,7 @@ pipeline {
         }
         stage('4-test2') {
             steps {
-		def response = httpRequest 'http://localhost:9889/index.html'
-	        println("Status: "+response.status)
-		println("Content: "+response.content)
+		httpRequest responseHandle: 'NONE', url: 'http://localhost:9889/index.html', wrapAsMultipart: false
             }
         }
         stage('5-Clean') {

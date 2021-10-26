@@ -16,12 +16,13 @@ pipeline {
             }
         }
         stage('3-test1') {
-            steps {
-		def response = httpRequest responseHandle: 'NONE', url: 'http://localhost:9889/index.html', wrapAsMultipart: false
-		println('Status: '+response.status)
-		println('Response: '+response.content)
-
+	    steps {
+		script {
+			def response = httpRequest responseHandle: 'NONE', url: 'http://localhost:9889/index.html', wrapAsMultipart: false
+			println('Status: '+response.status)
+			println('Response: '+response.content)
 		}
+	    }
         }
 
         stage('4-test2') {

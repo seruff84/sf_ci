@@ -18,20 +18,24 @@ pipeline {
         stage('3-test1') {
 	    steps {
 		script {
-			def response = httpRequest responseHandle: 'NONE', url: 'http://localhost:9889/index.html', wrapAsMultipart: false
-			println('Status: '+response.status)
-			println('Response: '+response.content)
+		     def response = httpRequest responseHandle: 'NONE', url: 'http://localhost:9889/index.html', wrapAsMultipart: false
+                     if (response.status == 200) {
+                     telegramSend(message: 'Hello World', chatId: 172467490)    
+		     }
 		}
 	    }
         }
 
         stage('4-test2') {
             steps {
-                sh '''            
-                    curl http://localhost:9889/index.html | md5sum | awk '{print $1 " index.html"}' > hash.md5
-                    md5sum -c hash.md5
-                '''
-            }
+		script {
+                    def md5 = sh '''            
+                         curl http://localhost:9889/index.html | md5sum | awk '{print $1 " index.html"}' > hash.md5
+                         md5sum -c hash.md5 | awk '{print $2}'
+                    '''
+                    println(md5)
+                 }
+             }
         }
         stage('5-Clean') {
             steps {

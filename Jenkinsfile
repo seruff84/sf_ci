@@ -23,7 +23,7 @@ pipeline {
                      if (response.status == 200) {
                           telegramSend(message: 'Status 200', chatId: 172467490)
                           return    
-		     } else if (response.status != 200 {
+		     } else if (response.status != 200) {
 	                  telegramSend(message: 'Status not 200', chatId: 172467490)
                           return
                        }

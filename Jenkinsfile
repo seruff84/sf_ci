@@ -48,11 +48,20 @@ pipeline {
                     telegramSend(message: 'md5' , chatId: 172467490)
 
                     if (md5 == 'OK') {
-                          telegramSend(message: 'MD5 OK', chatId: 172467490)
-                          return
+
+                        withCredentials([string(credentialsId: 'chatWebid', variable: 'TOKEN'), string(credentialsId: 'chatId', variable: 'CHAT_ID')]) {
+		            sh  ("""
+                                     curl -s -X POST https://api.telegram.org/bot${TOKEN}/sendMessage -d chat_id=${CHAT_ID} -d parse_mode=markdown -d text='MD5 OK'
+                            """)
+                        }
+                        return
                      } else {
-                          telegramSend(message: 'MD5 not OK', chatId: 172467490)
-                          return
+                        withCredentials([string(credentialsId: 'chatWebid', variable: 'TOKEN'), string(credentialsId: 'chatId', variable: 'CHAT_ID')]) {
+		            sh  ("""
+                                     curl -s -X POST https://api.telegram.org/bot${TOKEN}/sendMessage -d chat_id=${CHAT_ID} -d parse_mode=markdown -d text='MD5 not OK'
+                            """)
+                        }
+                        return
                      }
 
                  }

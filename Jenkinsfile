@@ -19,13 +19,18 @@ pipeline {
 	    steps {
 		script {
 		     def response = httpRequest responseHandle: 'NONE', url: 'http://localhost:9889/index.html', wrapAsMultipart: false
-                     telegramSend(message: 'Status 200', chatId: 172467490)
                      if (response.status == 200) {
-                          telegramSend(message: 'Status 200', chatId: 172467490)
+                        withCredentials([string(credentialsId: 'chatWebid', variable: 'TOKEN'), string(credentialsId: 'chatId', variable: 'CHAT_ID')]) {
+		            sh  ("""
+                                     curl -s -X POST https://api.telegram.org/bot${TOKEN}/sendMessage -d chat_id=${CHAT_ID} -d parse_mode=markdown -d text='response code 200'>
+                            """)
                           return    
 		     } else if (response.status != 200) {
-	                  telegramSend(message: 'Status not 200', chatId: 172467490)
-                          return
+                        withCredentials([string(credentialsId: 'chatWebid', variable: 'TOKEN'), string(credentialsId: 'chatId', variable: 'CHAT_ID')]) {
+		            sh  ("""
+                                     curl -s -X POST https://api.telegram.org/bot${TOKEN}/sendMessage -d chat_id=${CHAT_ID} -d parse_mode=markdown -d text='response code not 200'>
+                            """)
+                          return    
                        }
 		}
 	    }

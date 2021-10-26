@@ -42,11 +42,11 @@ pipeline {
             steps {
 		script {
                     def md5 = sh '''            
-                         curl http://localhost:9889/index.html | md5sum | awk '{print $1 " index.html"}' > hash.md5
+                         curl -s http://localhost:9889/index.html | md5sum | awk '{print $1 " index.html"}' > hash.md5
                          md5sum -c hash.md5 | awk '{print $2}'
                     '''
                     telegramSend(message: 'md5' , chatId: 172467490)
-                    println (md5)  
+                    println ('Status: '+md5)  
                     if (md5 == 'OK') {
 
                         withCredentials([string(credentialsId: 'chatWebid', variable: 'TOKEN'), string(credentialsId: 'chatId', variable: 'CHAT_ID')]) {
